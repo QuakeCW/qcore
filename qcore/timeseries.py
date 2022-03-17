@@ -222,6 +222,15 @@ def pgv2MMI(pgv):
         1,
     )
 
+def pgv2MMI_yl2018(pgv):
+    """
+    Calculates MMI from pgv based on Yun and Lee (2018)
+    A maximum function is applied to floor the value to 1
+    """
+    return np.maximum(
+        4.86 + 2.44 * np.log10(pgv),
+        1,
+    )
 
 def seis2txt(
     seis,
