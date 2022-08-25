@@ -203,16 +203,28 @@ def acc2vel(timeseries, dt):
 
 
 def pgv2MMI(pgv):
+#    """
+#    Calculates MMI from pgv based on Worden et al (2012)
+#    A maximum function is applied to floor the value to 1
+#    """
+#    return np.maximum(
+#        np.where(
+#            np.log10(pgv) < 0.53,
+#            3.78 + 1.47 * np.log10(pgv),
+#            2.89 + 3.16 * np.log10(pgv),
+#        ),
+#        1,
+#    )
+    return pgv2MMI_yl2018(pgv)
+
+
+def pgv2MMI_yl2018(pgv):
     """
-    Calculates MMI from pgv based on Worden et al (2012)
+    Calculates MMI from pgv based on Yun and Lee (2018)
     A maximum function is applied to floor the value to 1
     """
     return np.maximum(
-        np.where(
-            np.log10(pgv) < 0.53,
-            3.78 + 1.47 * np.log10(pgv),
-            2.89 + 3.16 * np.log10(pgv),
-        ),
+        4.86 + 2.44 * np.log10(pgv),
         1,
     )
 
@@ -309,6 +321,7 @@ class LFSeis:
                 print("e3d.par path: {}".format(self.e3dpar))
 
         # determine endianness by checking file size
+        print(self.seis)
         lfs = os.stat(self.seis[0]).st_size
         with open(self.seis[0], "rb") as lf0:
             nstat, nt = np.fromfile(lf0, dtype="<i4", count=6)[0::5]

@@ -589,7 +589,16 @@ def xyv_cpt_range(xyv_file, max_step=12, percentile=99.5, my_max=None, my_inc=No
     mn = np.min(lonlatvalue[:, 2])
     mx = np.max(lonlatvalue[:, 2])
 
+    print(lonlatvalue)
+    print(mn)
+    print(mx)
+    print("========")
     cpt_mx = np.percentile(lonlatvalue[:, 2], percentile)
+    if cpt_mx == 0:
+        cpt_mx = 1e-15
+
+    #if cpt_mx == 0:
+    #    pass
     if cpt_mx < 100:
         # 1 sf
         cpt_mx = round(cpt_mx, -int(math.floor(math.log10(abs(cpt_mx)))))

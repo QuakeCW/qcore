@@ -42,7 +42,14 @@ def get_nsub_stoch(stoch_file, get_area=False):
     total_area = 0
     with open(stoch_file, "r") as sf:
         # file starts with number of segments that follow
-        for seg in range(int(sf.readline())):
+        num_segs = sf.readline()
+        try:
+            num_segs = int(num_segs)
+        except ValueError:
+            print(f"Error:Invalid num_segs={num_segs} in {stoch_file}")
+            raise
+
+        for seg in range(num_segs):
             # metadata line 1 of 2
             meta1 = sf.readline().split()
             # nx * ny
