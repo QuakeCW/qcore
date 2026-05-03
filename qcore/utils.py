@@ -5,11 +5,12 @@ Mostly related to file system operations and other non-specific functionality.
 
 
 import os
-import imp
+import sys
+import importlib 
 import yaml
 from shutil import rmtree
 from collections import OrderedDict
-from collections import Mapping
+from collections.abc import Mapping
 
 
 class DotDictify(dict):
@@ -199,6 +200,7 @@ def setup_dir(directory, empty=False):
                 raise
 
 
+
 def load_py_cfg(f_path):
     """
     loads a python configuration file to a dictionary
@@ -208,11 +210,12 @@ def load_py_cfg(f_path):
     :param f_path: path to configuration file
     :return: dict of parameters
     """
-    with open(f_path) as f:
-        module = imp.load_module("params", f, f_path, (".py", "r", imp.PY_SOURCE))
-        cfg_dict = module.__dict__
-
-    return cfg_dict
+    spec = importlib.util.spec_from_file_location("params", f_path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules["params"] = module
+    spec.loader.exec_module(module)
+    
+    return module.__dict__
 
 
 def compare_versions(version1, version2, split_char="."):
